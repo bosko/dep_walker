@@ -1,12 +1,21 @@
+# -*- coding: utf-8 -*-
 # -*- ruby -*-
 
 require 'rubygems'
 require 'hoe'
+require 'rake/extensiontask'
 
-Hoe.spec 'gem_dep_walker' do
-  # developer('FIX', 'FIX@example.com')
+Hoe.spec 'dep_walker' do
+  developer('Boško Ivanišević', 'bosko.ivanisevic@gmail.com')
+  self.readme_file = 'README.rdoc'
+  self.history_file = 'History.rdoc'
+  self.extra_rdoc_files = FileList['*.rdoc']
+  self.extra_dev_deps << ['rake-compiler', '>= 0']
+  self.spec_extras = { :extensions => ["ext/dep_walker/extconf.rb"] }
 
-  # self.rubyforge_name = 'gem_dep_walkerx' # if different than 'gem_dep_walker'
+  Rake::ExtensionTask.new('dep_walker', spec) do |ext|
+    ext.lib_dir = File.join('lib', 'dep_walker')
+  end
 end
 
-# vim: syntax=ruby
+Rake::Task[:test].prerequisites << :compile

@@ -1,4 +1,4 @@
-= gem_dep_walker
+= dep_walker
 
 * FIX (url)
 

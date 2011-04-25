@@ -3,6 +3,6 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-bin/gem_dep_walker
-lib/gem_dep_walker.rb
-test/test_gem_dep_walker.rb
+bin/dep_walker
+lib/dep_walker.rb
+test/test_dep_walker.rb
