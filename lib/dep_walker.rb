@@ -37,7 +37,7 @@ module DepWalker
             if shlib_dir
               found[shlib] = shlib_dir
             else
-              not_found << shlib
+              not_found << shlib unless shlib.start_with? "msvcrt-ruby"
             end
           end
         end
