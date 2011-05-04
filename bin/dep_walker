@@ -1,3 +1,69 @@
 #!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
-abort "you need to write me"
+require "ostruct"
+require "optparse"
+require "dep_walker"
+
+def print_result(deps)
+  if deps.empty?
+    print "All dependencies found"
+  else
+    deps.each do |k,v|
+      puts "Missing dependencies:"
+      print "  #{k}: "
+      missing = []
+      v.each do |ext,dll|
+        missing << dll unless missing.include? dll
+      end
+      puts missing.join(",")
+    end
+  end
+end
+
+options = OpenStruct.new
+
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: dep_walker [options]"
+  opts.separator ""
+  opts.separator "Options are ..."
+
+  opts.on('-c', '--check [GEM_NAME]', 'Check single gem') do |name|
+    options.gem_name = name
+  end
+
+  opts.on('-a', '--all', 'Check all installed gems') do
+    options.check_all = true
+  end
+
+  opts.on('-t', '--trace', 'Print messages while checkint is performed') do
+    options.trace = true
+  end
+  
+  opts.on('-v', '--version', 'Display program version') do
+    puts "DepWalker version #{DepWalker::VERSION}"
+    exit
+  end
+
+  opts.on('-h', '--help', 'Display this screen') do
+    puts opts
+    exit
+  end
+end
+
+begin
+  optparse.parse!
+rescue OptionParser::ParseError => pe
+  puts pe.message
+  puts ''
+  puts optparse
+  exit
+end
+
+if options.check_all
+  print_result(DepWalker.check_all)
+elsif options.gem_name
+  print_result(DepWalker.check options.gem_name)
+else
+  puts optparse
+end

@@ -57,6 +57,12 @@ module DepWalker
     deps
   end
 
+  def dll_dependencies(dll_path = "")
+    return [] unless ['.dll', '.so'].include? File.extname dll_path
+    
+    raw_dependencies(dll_path).map {|dep| dep.downcase}.uniq
+  end
+
   private
 
   def find_shlib_dir(init_path, shlib)
@@ -64,11 +70,5 @@ module DepWalker
       return path if File.file?(File.join(path, shlib))
     end
     nil
-  end
-
-  def dll_dependencies(dll_path = "")
-    return [] unless ['.dll', '.so'].include? File.extname dll_path
-    
-    raw_dependencies(dll_path).map {|dep| dep.downcase}.uniq
   end
 end
