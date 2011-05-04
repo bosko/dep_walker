@@ -7,21 +7,20 @@ require "dep_walker"
 
 def print_result(deps)
   if deps.empty?
-    print "All dependencies found"
+    print green("All dependencies found")
   else
     deps.each do |k,v|
-      puts "Missing dependencies:"
-      print "  #{k}: "
+      print red("Missing dependencies:\n  #{k}: ")
       missing = []
       v.each do |ext,dll|
         missing << dll unless missing.include? dll
       end
-      puts missing.join(",")
+      puts red(missing.join(","))
     end
   end
 end
 
-options = OpenStruct.new
+$options = OpenStruct.new
 
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: dep_walker [options]"
@@ -29,15 +28,19 @@ optparse = OptionParser.new do |opts|
   opts.separator "Options are ..."
 
   opts.on('-c', '--check [GEM_NAME]', 'Check single gem') do |name|
-    options.gem_name = name
+    $options.gem_name = name
   end
 
   opts.on('-a', '--all', 'Check all installed gems (overrides -c)') do
-    options.check_all = true
+    $options.check_all = true
   end
 
   opts.on('-t', '--trace', 'Print messages while checkint is performed') do
-    options.trace = true
+    $options.trace = true
+  end
+
+  opts.on('', '--color', 'Enable color in output') do
+    $options.color = true
   end
   
   opts.on('-v', '--version', 'Display program version') do
@@ -60,10 +63,10 @@ rescue OptionParser::ParseError => pe
   exit
 end
 
-if options.check_all
+if $options.check_all
   print_result(DepWalker.check_all)
-elsif options.gem_name
-  print_result(DepWalker.check options.gem_name)
+elsif $options.gem_name
+  print_result(DepWalker.check $options.gem_name)
 else
   puts optparse
 end

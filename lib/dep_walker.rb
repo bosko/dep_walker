@@ -1,10 +1,43 @@
 $LOAD_PATH.unshift File.expand_path('../', __FILE__) 
 require "dep_walker/dep_walker"
 
+def green(string)
+  if $options.color
+    "\e[1;32m#{string}\e[0m"
+  else
+    string
+  end
+end
+
+def red(string)
+  if $options.color
+    "\e[1;31m#{string}\e[0m"
+  else
+    string
+  end
+end
+
+def trace(message, level=TRACE_INFO)
+  return unless $options.trace
+  
+  case level
+  when TRACE_INFO
+    puts message
+  when TRACE_SUCCESS
+    puts green(message)
+  when TRACE_ERROR
+    puts red(message)
+  end
+end
+
 module DepWalker
   extend self
   
   VERSION = '1.0.0'
+
+  TRACE_INFO = 0
+  TRACE_SUCCESS = 1
+  TRACE_ERROR = 2
 
   def check_all
     all_deps = {}
@@ -28,7 +61,9 @@ module DepWalker
   def walk_deps(gem_spec)
     dep_tree = {}
     if gem_spec.is_a? Gem::Specification
+      trace("Checking #{gem_spec.full_name}", TRACE_INFO)
       dependencies(gem_spec).each do |k,v|
+        trace("  #{k}", TRACE_INFO)
         found = {}
         not_found = []
         v.each do |shlib|
@@ -36,13 +71,16 @@ module DepWalker
             shlib_dir = find_shlib_dir(File.dirname(k), shlib)
             if shlib_dir
               found[shlib] = shlib_dir
-            else
-              not_found << shlib unless shlib.start_with? "msvcrt-ruby"
+              trace("    #{shlib} -> Found at #{shlib_dir}", TRACE_SUCCESS)
+            elsif !shlib.start_with?("msvcrt-ruby")
+              not_found << shlib
+              trace("    #{shlib} -> Not found", TRACE_ERROR)
             end
           end
         end
         dep_tree[k] = {:found => found, :not_found => not_found}
       end
+      trace("="*40, TRACE_INFO)
     end
     dep_tree
   end
