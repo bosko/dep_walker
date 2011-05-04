@@ -32,7 +32,7 @@ optparse = OptionParser.new do |opts|
     options.gem_name = name
   end
 
-  opts.on('-a', '--all', 'Check all installed gems') do
+  opts.on('-a', '--all', 'Check all installed gems (overrides -c)') do
     options.check_all = true
   end
 
