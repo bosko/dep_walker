@@ -1,4 +1,5 @@
-$LOAD_PATH.unshift File.expand_path('../', __FILE__) 
+$LOAD_PATH.unshift File.expand_path('../', __FILE__)
+require 'rubygems'
 require "dep_walker/dep_walker"
 
 def green(string)
@@ -21,11 +22,11 @@ def trace(message, level=TRACE_INFO)
   return unless $options.trace
   
   case level
-  when TRACE_INFO
+  when DepWalker::TRACE_INFO
     puts message
-  when TRACE_SUCCESS
+  when DepWalker::TRACE_SUCCESS
     puts green(message)
-  when TRACE_ERROR
+  when DepWalker::TRACE_ERROR
     puts red(message)
   end
 end
