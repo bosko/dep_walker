@@ -42,17 +42,17 @@ module DepWalker
 
   def check_all
     all_deps = {}
-    Gem.source_index.gems.each do |name,spec|
+    Gem::Specification.find_all.each do |spec|
       gem_deps = check(spec)
-      all_deps[name] = gem_deps unless gem_deps.empty?
+      all_deps[spec.full_name] = gem_deps unless gem_deps.empty?
     end
     
     all_deps
   end
 
-  def check(name_or_spec)
+  def check(name_or_spec, version=nil)
     gem_deps = {}
-    spec = name_or_spec.is_a?(String) ? Gem.source_index.gems[name_or_spec] : name_or_spec
+    spec = name_or_spec.is_a?(String) ? Gem::Specification.find_by_name(name_or_spec, :version=>version) : name_or_spec
     walk_deps(spec).each do |k,v|
       gem_deps[k] = v[:not_found] unless v[:not_found].empty?
     end
