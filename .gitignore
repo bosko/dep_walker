@@ -1,2 +1,4 @@
 tmp/
+doc/
+pkg/
 lib/dep_walker/
