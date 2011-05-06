@@ -2,6 +2,10 @@ $LOAD_PATH.unshift File.expand_path('../', __FILE__)
 require 'rubygems'
 require "dep_walker/dep_walker"
 
+##
+# Set the terminal's foreground color to green if
+# colored output is set through options
+##
 def green(string)
   if $options.color
     "\e[1;32m#{string}\e[0m"
@@ -10,6 +14,10 @@ def green(string)
   end
 end
 
+##
+# Set the terminal's foreground color to red if
+# colored output is set through options
+##
 def red(string)
   if $options.color
     "\e[1;31m#{string}\e[0m"
@@ -18,6 +26,10 @@ def red(string)
   end
 end
 
+##
+# Output message colored according to the message
+# level (info - no color, success - green, error - red)
+##
 def trace(message, level=TRACE_INFO)
   return unless $options.trace
   
@@ -36,10 +48,27 @@ module DepWalker
   
   VERSION = '1.0.0'
 
+  ##
+  # Informational messages
+  ##
   TRACE_INFO = 0
+
+  ##
+  # Succes messages
+  ##
   TRACE_SUCCESS = 1
+
+  ##
+  # Error messages
+  #
   TRACE_ERROR = 2
 
+  ##
+  # Checks dependencies for all installed gems. Returns
+  # hash of all unresolved dependencies with the full Gem
+  # name in keys and hash of extension libraries and
+  # dependencies that are not found in the system.
+  ##
   def check_all
     all_deps = {}
     Gem::Specification.find_all.each do |spec|
@@ -50,15 +79,30 @@ module DepWalker
     all_deps
   end
 
+  ##
+  # Checks dependencis for a single Gem. Returns hash of extension
+  # library used by Gem as a key and array of unresolved dependencies
+  # as a value.
+  ##
   def check(name_or_spec, version=nil)
     gem_deps = {}
-    spec = name_or_spec.is_a?(String) ? Gem::Specification.find_by_name(name_or_spec, :version=>version) : name_or_spec
-    walk_deps(spec).each do |k,v|
-      gem_deps[k] = v[:not_found] unless v[:not_found].empty?
+    spec = name_or_spec.is_a?(String) ? Gem::Specification.find_all_by_name(name_or_spec, version) : name_or_spec
+    spec.each do |s|
+      walk_deps(s).each do |k,v|
+        gem_deps[k] = v[:not_found] unless v[:not_found].empty?
+      end
     end
     gem_deps
   end
-  
+
+  ##
+  # Search dependency dlls for all extension libraries in the Gem.
+  # Search is performed across all directories in the system path
+  # and the extension library's directory. Returns hash with a
+  # full path to extension library as a key and hash with all
+  # dependencies found with the paths from which they will be loade
+  # and all dependencies that are not found.
+  ##
   def walk_deps(gem_spec)
     dep_tree = {}
     if gem_spec.is_a? Gem::Specification
@@ -86,6 +130,10 @@ module DepWalker
     dep_tree
   end
 
+  ##
+  # Returns dependencies for all shared libraries found in the
+  # Gem's directories
+  ##
   def dependencies(gem_spec)
     deps = {}
     Dir.glob(File.join(gem_spec.full_gem_path, "**/*")).select do |f|
@@ -96,6 +144,9 @@ module DepWalker
     deps
   end
 
+  ##
+  # Returns all dependencies for input shared library
+  ##
   def dll_dependencies(dll_path = "")
     return [] unless ['.dll', '.so'].include? File.extname dll_path
     
