@@ -1,41 +1,72 @@
 = dep_walker
 
-* FIX (url)
+* GitHub: http://github.com/bosko/dep_walker
+* Issues: http://github.com/bosko/dep_walker/issues
+* Blog:   http://pragdevnotes.com
 
 == DESCRIPTION:
 
-FIX (describe your package)
+The dep_walker is small utility gem that checks dependencies for native extensions
+used by installed gems on Windows. If you are {RubyInstaller}[http://www.rubyinstaller.org]
+user and have seen message box:
+
+<em>"This application has failed to start because <name_of_dll>.dll was not found.
+Re-installing the application may fix this problem"</em>
+
+when you tried to use gem that has pre-built binariy extension, you've faced common
+problem on Windows systems - missing dependency dll. Same error might occur even if
+extension library was built during gem installation if all header files and libraries
+are available to the build tools, but runtime dependencies are not present.
+
+With dep_walker you can simply check all installed gems. Even more, if log is turned on,
+gem will print out information where dependency is found on the system, so you can check
+whether Ruby extension really uses correct version of required dll.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* None at the moment
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+The dep_walker can check all installed gems:
+
+ >dep_walker -a
+
+or just specific gem
+
+ >dep_walker -c nokogiri-1.4.4
+
+For verbose output use -t switch
+
+ >dep_walker -c nokogiri-1.4.4 -t
+
+Finally if you want colored output use --color option. In this case you must
+have {ANSICON}[http://adoxa.110mb.com/ansicon/index.html] installed.
+
+For full list of options use
+
+ >dep_walker -h
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* rake
+* rubygems
+* hoe (development)
+* rake-compiler (development)
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+ >gem install dep_walker
 
 == DEVELOPERS:
 
-After checking out the source, run:
-
-  $ rake newb
-
-This task will install any missing dependencies, run the tests/specs,
-and generate the RDoc.
+* Boško Ivanišević (bosko ivanisevic at gmail com)
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2011 FIX
+Copyright (c) 2011 Boško Ivanišević
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
