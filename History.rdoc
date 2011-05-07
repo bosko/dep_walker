@@ -1,6 +1,12 @@
+=== 1.0.1 / 2011-05-07
+
+* Bugfixes:
+
+  * Fixed checking all gems
+  * Gem built with Ruby 1.8.7 to avoid error in date format caused by RubyGems 1.8.1
+
 === 1.0.0 / 2011-04-13
 
 * 1 major enhancement
 
   * Birthday!
-

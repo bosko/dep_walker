@@ -46,7 +46,7 @@ end
 module DepWalker
   extend self
   
-  VERSION = '1.0.0'
+  VERSION = '1.0.1'
 
   ##
   # Informational messages
@@ -86,7 +86,7 @@ module DepWalker
   ##
   def check(name_or_spec, version=nil)
     gem_deps = {}
-    spec = name_or_spec.is_a?(String) ? Gem::Specification.find_all_by_name(name_or_spec, version) : name_or_spec
+    spec = name_or_spec.is_a?(String) ? Gem::Specification.find_all_by_name(name_or_spec, version) : [name_or_spec]
     spec.each do |s|
       walk_deps(s).each do |k,v|
         gem_deps[k] = v[:not_found] unless v[:not_found].empty?
