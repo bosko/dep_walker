@@ -4,9 +4,9 @@ Manifest.txt
 README.rdoc
 Rakefile
 bin/dep_walker
-ext/dep_walker/extconf.rb
-ext/dep_walker/win.h
-ext/dep_walker/win.c
 ext/dep_walker/dep_walker.c
+ext/dep_walker/extconf.rb
+ext/dep_walker/win.c
+ext/dep_walker/win.h
 lib/dep_walker.rb
 test/test_dep_walker.rb
