@@ -7,6 +7,7 @@ require 'rake/extensiontask'
 
 Hoe.spec 'dep_walker' do
   developer('Boško Ivanišević', 'bosko.ivanisevic@gmail.com')
+  self.url = %q{http://github.com/bosko/dep_walker}
   self.readme_file = 'README.rdoc'
   self.history_file = 'History.rdoc'
   self.extra_rdoc_files = FileList['*.rdoc']
