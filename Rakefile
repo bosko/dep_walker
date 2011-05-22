@@ -13,7 +13,14 @@ Hoe.spec 'dep_walker' do
   self.extra_rdoc_files = FileList['*.rdoc']
   self.extra_dev_deps << ['rake-compiler', '>= 0']
   self.spec_extras = { :extensions => ["ext/dep_walker/extconf.rb"] }
+  self.require_rubygems_version(">= 1.8.0")
+  self.post_install_message = %Q{**************************************************
 
+  Thank you for installing #{self.name}-#{self.version}!
+
+  This version of rspec-rails only works with versions of rubygems >= 1.8.0
+**************************************************}
+  
   Rake::ExtensionTask.new('dep_walker', spec) do |ext|
     ext.lib_dir = File.join('lib', 'dep_walker')
   end

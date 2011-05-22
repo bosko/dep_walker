@@ -1,3 +1,13 @@
+=== 1.0.2 / 2011-05-22
+
+* Enhancements:
+
+  * Improved and unified report when single and all gems are checked
+
+* Bugfixes:
+
+  * Required RubyGems >= 1.8.0
+
 === 1.0.1 / 2011-05-07
 
 * Bugfixes:
