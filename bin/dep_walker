@@ -10,12 +10,10 @@ def print_result(deps)
     print green("All dependencies found")
   else
     deps.each do |k,v|
-      print red("Missing dependencies:\n  #{k}: ")
-      missing = []
+      print red("Gem #{k}:\n")
       v.each do |ext,dll|
-        missing << dll unless missing.include? dll
+        puts red("  Extension: #{ext} is missing: #{dll.join(',')}")
       end
-      puts red(missing.join(","))
     end
   end
 end

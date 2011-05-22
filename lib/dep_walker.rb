@@ -73,7 +73,7 @@ module DepWalker
     all_deps = {}
     Gem::Specification.find_all.each do |spec|
       gem_deps = check(spec)
-      all_deps[spec.full_name] = gem_deps unless gem_deps.empty?
+      all_deps.merge! gem_deps unless gem_deps.empty?
     end
     
     all_deps
@@ -88,9 +88,11 @@ module DepWalker
     gem_deps = {}
     spec = name_or_spec.is_a?(String) ? Gem::Specification.find_all_by_name(name_or_spec, version) : [name_or_spec]
     spec.each do |s|
+      spec_deps = {}
       walk_deps(s).each do |k,v|
-        gem_deps[k] = v[:not_found] unless v[:not_found].empty?
+        spec_deps[k] = v[:not_found] unless v[:not_found].empty?
       end
+      gem_deps[s.full_name] = spec_deps unless spec_deps.empty?
     end
     gem_deps
   end
