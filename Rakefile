@@ -18,7 +18,7 @@ Hoe.spec 'dep_walker' do
 
   Thank you for installing #{self.name}-#{self.version}!
 
-  This version of rspec-rails only works with versions of rubygems >= 1.8.0
+  This version of dep_walker only works with versions of rubygems >= 1.8.0
 **************************************************}
   
   Rake::ExtensionTask.new('dep_walker', spec) do |ext|
